@@ -1,3 +1,3 @@
 # two-pass-assembler
-Two-pass assembler for the 12 bit accumulator architecture having instructions as follows.
+Two-pass assembler for the 12 bit accumulator architecture.
 
