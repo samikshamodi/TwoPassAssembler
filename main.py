@@ -99,17 +99,22 @@ def build_symbol_table(input_file):
 def generate_machine_code(input_file):
     for i,line in enumerate(input_file):
         if(line[0][-1]==':'): #It has a label
-            output_file.write("\n"+to_binary(i))
-            output_file.write("\t"+opcode_table[line[1]])
-            output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
+            if(line[1]=='CLA' or line[1]=='STP'):
+                output_file.write("\n"+to_binary(i))
+                output_file.write("\t"+opcode_table[line[1]])
+            else:
+                output_file.write("\n"+to_binary(i))
+                output_file.write("\t"+opcode_table[line[1]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
         else:  #It does not have a label
-            output_file.write("\n"+to_binary(i))
-            output_file.write("\t"+opcode_table[line[0]])
-            output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
+            if(line[0]=='CLA' or line[0]=='STP'):
+                output_file.write("\n"+to_binary(i))
+                output_file.write("\t"+opcode_table[line[0]])
+            else:
+                output_file.write("\n"+to_binary(i))
+                output_file.write("\t"+opcode_table[line[0]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
           
-
-
-#print(to_binary(symbol_table['Y']))    #TODO REmove
 
 #erasing output.txt file every time the program is run
 open("output.txt", "w").close()  
@@ -119,8 +124,8 @@ output_file = open("output.txt","a")
 open("error.txt", "w").close()  
 error_file = open("error.txt","a") 
 
-# input_file_name=input("Enter input file name: ")   #Takes the file name where the assembly language program is stored
-input_file_name = "input.txt"  # TODO remove this line later
+input_file_name=input("Enter input file name: ")   #Takes the file name where the assembly language program is stored
+#input_file_name = "input.txt"  
 
 try:
     input_file = open(input_file_name, "r")
@@ -146,6 +151,6 @@ print("\n",symbol_table)
 
 #Add label_table to symbol_table
 symbol_table.update(label_table)
-print(symbol_table)
+print("\n",symbol_table)
 
 generate_machine_code(input_file)
