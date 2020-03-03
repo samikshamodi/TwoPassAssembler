@@ -146,15 +146,18 @@ def generate_machine_code(input_file):
 def other_errors(input_file):
     # Error symbol not used
     for element in label_table:
+        # error_flag is True if the element in label table is not found as an operand
         error_flag = True
         for line in input_file:
             if(line[0][-1] == ':'):  # The line has a label
                 if(line[1] != 'CLA' and line[1] != 'STP'):
+                    # error_flag is made False if the element in label table is found as an operand
                     if element == line[2]:
                         error_flag = False
                         break
             else:  # The line does not have a label
                 if(line[0] != 'CLA' and line[0] != 'STP'):
+                    # error_flag is made False if the element in label table is found as an operand
                     if element == line[1]:
                         error_flag = False
                         break
@@ -164,12 +167,13 @@ def other_errors(input_file):
 
     # Error symbol defined more than once
     for element in label_table:
-        error_flag = 0
+        error_flag = 0  # error_flag is 0 denoting the element has occurred 0 times so far
         for line in input_file:
-            if(line[0][-1] == ':' and line[0][:-1] == element):  # The line has a label
-                error_flag = error_flag+1
+            # The line has a label and element in label table is found in the program
+            if(line[0][-1] == ':' and line[0][:-1] == element):
+                error_flag = error_flag+1   # Increasing error_flag count by 1
 
-        if error_flag > 1:
+        if error_flag > 1:  # element in label table occurs more than once
             error_file.write("\n Symbol defined more than once "+str(element))
 
 
