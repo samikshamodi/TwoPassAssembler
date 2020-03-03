@@ -1,3 +1,4 @@
+# Samiksha Modi - 2019331
 opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB': '0100', 'BRZ': '0101',
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 symbol_table = {}
@@ -70,7 +71,7 @@ def build_symbol_table(input_file):
                         if(line[2].isdigit()):
                             symbol_table[line[2]] = int(line[2])
                         else:
-                            symbol_table[line[2]] = 100+i
+                            symbol_table[line[2]] = 256+i
                             i += 1
             else:
                 print("\n Invalid opcode", line)
@@ -90,7 +91,7 @@ def build_symbol_table(input_file):
                         if(line[1].isdigit()):
                             symbol_table[line[1]] = int(line[1])
                         else:
-                            symbol_table[line[1]] = 100+i
+                            symbol_table[line[1]] = 256+i
                             i += 1
             else:
                 error_file.write("\n Invalid opcode"+str(line))
@@ -200,10 +201,14 @@ input_file = input_file.read()
 
 # Splits the input file at new line and converts it to list
 input_file = input_file.split("\n")
-
 print("\n", input_file)
+
 # Removes the comments and empty lines
 input_file = process(input_file)
+
+# Checking if the no of instructions exceed the maximum no of instructions
+if(len(input_file) > 256):
+    error_file.write("\n No of instructions exceed 256")
 print("\n", input_file)
 
 # Builds the label table
