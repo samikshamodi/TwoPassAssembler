@@ -88,9 +88,9 @@ def pass_one(input_file):
     # Builds the label table
     def build_label_table():
         global program_counter
-        for program_counter, line in enumerate(input_file):
+        for j, line in enumerate(input_file):
             if line[0][-1] == ':':  # The line has a label
-                label_table[line[0][:-1]] = program_counter
+                label_table[line[0][:-1]] = j+program_counter
 
     # Builds the symbol table
     def build_symbol_table():
@@ -255,8 +255,8 @@ open("error.txt", "w").close()
 error_file = open("error.txt", "a")
 
 # Takes the file name where the assembly language program is stored
-#input_file_name = input("Enter input file name: ")
-input_file_name = "input.txt"
+input_file_name = input("Enter input file name: ")
+#input_file_name = "input.txt"
 
 try:
     input_file = open(input_file_name, "r")
@@ -280,17 +280,20 @@ print("\n Declare table: ",declare_table)
 
 #Checks if START is missing. If missing, it reports the error. If present it removes it from input_file list
 if input_file[0][0]=='START':
+    if (len(input_file[0]))>1:
+        program_counter=int(input_file[0][1])
     input_file.remove(input_file[0])
+    
 else:
     error_file.write("\n START statement is missing")
 
 print("\n",input_file)
 
 # Checking if the no of instructions exceed the maximum no of instructions
-if(len(input_file) > 256):
-    error_file.write("\n No of instructions exceed 256")
+if(len(input_file)+program_counter> 256):
+    error_file.write("\n Memory address of instructions exceed 256")
 
-# Calls pass_onoe of the assembler
+# Calls pass_one of the assembler
 pass_one(input_file)
 
 # Finds other errors in the assembly language program like symbol not used
