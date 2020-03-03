@@ -299,3 +299,4 @@ other_errors(input_file)
 
 # Write the machine code in output.txt
 pass_two(input_file)
+
