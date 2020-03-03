@@ -4,6 +4,7 @@ symbol_table = {}
 label_table = {}
 STP_flag = False  # False if no STP in program, True if STP is present in program
 i = 1
+program_counter = 0
 
 
 def to_binary(data):
@@ -43,10 +44,10 @@ def process(input_file):
 
 
 def build_label_table(input_file):
-    global i
-    for j, line in enumerate(input_file):
+    global program_counter
+    for program_counter, line in enumerate(input_file):
         if line[0][-1] == ':':  # The line has a label
-            label_table[line[0][:-1]] = j
+            label_table[line[0][:-1]] = program_counter
 
 
 def build_symbol_table(input_file):
@@ -98,27 +99,52 @@ def build_symbol_table(input_file):
         error_file.write("\n STP missing")
 
 
+"""
 def generate_machine_code(input_file):
-    for i, line in enumerate(input_file):
+    # Layout in memory
+    global program_counter
+    for program_counter, line in enumerate(input_file):
         if(line[0][-1] == ':'):  # The line has a label
             if(line[1] == 'CLA' or line[1] == 'STP'):
-                output_file.write("\n"+to_binary(i))
+                output_file.write("\n"+to_binary(program_counter))
                 output_file.write("\t"+opcode_table[line[1]])
             else:
-                output_file.write("\n"+to_binary(i))
+                output_file.write("\n"+to_binary(program_counter))
                 output_file.write("\t"+opcode_table[line[1]])
                 output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
         else:  # The line does not have a label
             if(line[0] == 'CLA' or line[0] == 'STP'):
-                output_file.write("\n"+to_binary(i))
+                output_file.write("\n"+to_binary(program_counter))
                 output_file.write("\t"+opcode_table[line[0]])
             else:
-                output_file.write("\n"+to_binary(i))
+                output_file.write("\n"+to_binary(program_counter))
                 output_file.write("\t"+opcode_table[line[0]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[1]])))"""
+
+
+def generate_machine_code(input_file):
+    global program_counter
+    for program_counter, line in enumerate(input_file):
+        if(line[0][-1] == ':'):  # The line has a label
+            if(line[1] == 'CLA' or line[1] == 'STP'):
+                # output_file.write("\n"+to_binary(program_counter))
+                output_file.write("\n"+opcode_table[line[1]])
+            else:
+                # output_file.write("\n"+to_binary(program_counter))
+                output_file.write("\n"+opcode_table[line[1]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
+        else:  # The line does not have a label
+            if(line[0] == 'CLA' or line[0] == 'STP'):
+                # output_file.write("\n"+to_binary(program_counter))
+                output_file.write("\n"+opcode_table[line[0]])
+            else:
+                # output_file.write("\n"+to_binary(program_counter))
+                output_file.write("\n"+opcode_table[line[0]])
                 output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
 
 
 def other_errors(input_file):
+    # Error symbol not used
     for element in label_table:
         error_flag = False
         for line in input_file:
@@ -135,6 +161,16 @@ def other_errors(input_file):
 
         if error_flag == True:
             error_file.write("\n Symbol not used "+str(element))
+
+    # Error symbol defined more than once
+    for element in label_table:
+        error_flag = 0
+        for line in input_file:
+            if(line[0][-1] == ':' and line[0][:-1] == element):  # The line has a label
+                error_flag = error_flag+1
+
+        if error_flag > 1:
+            error_file.write("\n Symbol used more than once "+str(element))
 
 
 # Erasing output.txt file every time the program is run
