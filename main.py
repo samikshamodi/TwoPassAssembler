@@ -146,17 +146,17 @@ def generate_machine_code(input_file):
 def other_errors(input_file):
     # Error symbol not used
     for element in label_table:
-        error_flag = False
+        error_flag = True
         for line in input_file:
             if(line[0][-1] == ':'):  # The line has a label
                 if(line[1] != 'CLA' and line[1] != 'STP'):
                     if element == line[2]:
-                        error_flag = True
+                        error_flag = False
                         break
             else:  # The line does not have a label
                 if(line[0] != 'CLA' and line[0] != 'STP'):
                     if element == line[1]:
-                        error_flag = True
+                        error_flag = False
                         break
 
         if error_flag == True:
@@ -170,7 +170,7 @@ def other_errors(input_file):
                 error_flag = error_flag+1
 
         if error_flag > 1:
-            error_file.write("\n Symbol used more than once "+str(element))
+            error_file.write("\n Symbol defined more than once "+str(element))
 
 
 # Erasing output.txt file every time the program is run
