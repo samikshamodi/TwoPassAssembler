@@ -4,48 +4,48 @@ opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 symbol_table = {}
 label_table = {}
-declare_table=[]
+declare_table = []
 END_flag = False  # False if no END in program, True if END is present in program
 i = 1
 program_counter = 0
 
+
 def declaration_table(input_file):
     global declare_table
-    temp_table=[]
+    temp_table = []
     # Appending the 'DC' 'DS line in declare_table
     for line in input_file:
-        if len(line[0])==2:
+        if len(line[0]) == 2:
             declare_table.append(line)
 
     # Removing 'DC' 'DS' line from input file by storing it in res then return res to input_file
-    res = [tt for tt in input_file if tt not in declare_table] 
+    res = [tt for tt in input_file if tt not in declare_table]
 
     # Appending just the variable name from declare_table to temp_table
     for line in declare_table:
         temp_table.append(line[1])
 
     # Copying temp_table to declare_table
-    declare_table=temp_table
-
+    declare_table = temp_table
 
     # Removing '=' sign from elements in declare_table
-    for i,element in enumerate(declare_table):
+    for i, element in enumerate(declare_table):
         if '=' in element:
-            declare_table[i]=element[:element.find('=')]
-    
+            declare_table[i] = element[:element.find('=')]
+
     # Checking if any symbol has been declared twice and removing it
     for element in declare_table:
-        temp=declare_table.count(element)
-        if temp>1:
-            error_file.write("\n Symbol defined more than once: "+ str(element))
-            cnt=1
-            while cnt<temp:
+        temp = declare_table.count(element)
+        if temp > 1:
+            error_file.write(
+                "\n Symbol defined more than once: " + str(element))
+            cnt = 1
+            while cnt < temp:
                 declare_table.remove(element)
-                cnt=cnt+1
-
+                cnt = cnt+1
 
     return res
-            
+
 
 def to_binary(data):
     return('{:012b}'.format(int(data)))
@@ -88,9 +88,9 @@ def pass_one(input_file):
     # Builds the label table
     def build_label_table():
         global program_counter
-        for program_counter, line in enumerate(input_file):
+        for j, line in enumerate(input_file):
             if line[0][-1] == ':':  # The line has a label
-                label_table[line[0][:-1]] = program_counter
+                label_table[line[0][:-1]] = j+program_counter
 
     # Builds the symbol table
     def build_symbol_table():
@@ -118,7 +118,7 @@ def pass_one(input_file):
                 else:
                     error_file.write("\n Invalid opcode"+str(line))
                     input_file.remove(line)
-                    
+
             else:  # The line does not have a label
                 if(line[0] == 'CLA' or line[0] == 'STP' or line[0] == 'END'):
                     if(line[0] == 'END'):
@@ -151,13 +151,11 @@ def pass_one(input_file):
     print("\n Symbol table: ", symbol_table)
 
     for element in symbol_table:
-        error_flag=True #assuming error is there that is a symbol in the symbol is not defined. That is a symbol in the symbol table is not present in declare table
+        error_flag = True  # assuming error is there that is a symbol in the symbol is not defined. That is a symbol in the symbol table is not present in declare table
         if element in declare_table:
-            error_flag=False
-        if error_flag==True:
+            error_flag = False
+        if error_flag == True:
             error_file.write("\n Symbol used but not defined: " + str(element))
-
-
 
     # Add label table to the symbol table
     symbol_table.update(label_table)
@@ -255,8 +253,8 @@ open("error.txt", "w").close()
 error_file = open("error.txt", "a")
 
 # Takes the file name where the assembly language program is stored
-#input_file_name = input("Enter input file name: ")
-input_file_name = "input.txt"
+input_file_name = input("Enter input file name: ")
+#input_file_name = "input.txt"
 
 try:
     input_file = open(input_file_name, "r")
@@ -274,23 +272,26 @@ print("\n", input_file)
 # Removes the comments and empty lines
 input_file = process(input_file)
 
-#Stores the symbols that have been declared and are not labels
-input_file=declaration_table(input_file)
-print("\n Declare table: ",declare_table)
+# Stores the symbols that have been declared and are not labels
+input_file = declaration_table(input_file)
+print("\n Declare table: ", declare_table)
 
-#Checks if START is missing. If missing, it reports the error. If present it removes it from input_file list
-if input_file[0][0]=='START':
+# Checks if START is missing. If missing, it reports the error. If present it removes it from input_file list
+if input_file[0][0] == 'START':
+    if (len(input_file[0])) > 1:
+        program_counter = int(input_file[0][1])
     input_file.remove(input_file[0])
+
 else:
     error_file.write("\n START statement is missing")
 
-print("\n",input_file)
+print("\n", input_file)
 
 # Checking if the no of instructions exceed the maximum no of instructions
-if(len(input_file) > 256):
-    error_file.write("\n No of instructions exceed 256")
+if(len(input_file)+program_counter > 256):
+    error_file.write("\n Memory address of instructions exceed 256")
 
-# Calls pass_onoe of the assembler
+# Calls pass_one of the assembler
 pass_one(input_file)
 
 # Finds other errors in the assembly language program like symbol not used
