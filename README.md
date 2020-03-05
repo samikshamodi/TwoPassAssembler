@@ -16,7 +16,7 @@ In the first pass, it reads the entire source program. A symbol table having var
 In the second pass the instructions are again read and are assembled using the symbol table. Basically, the assembler goes through the program one line at a time, and generates machine code for that instruction. Then the assembler proceeds to the next instruction. In this way, the entire machine code is created. 
 
 The program is loaded at memory address 0000 0000 0000 by default.
-The number of instructions should not exceed 256.
+The memory address of instructions should not exceed 256.
 
 ## Assembler Opcodes
 | Opcode | Meaning |	Assembly Opcode |
