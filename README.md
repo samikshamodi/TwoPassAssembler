@@ -45,7 +45,7 @@ The folowing are the errors handles in this program
 * An opcode is supplied with too many operands 
 * The START statement is missing
 * The END statement is missing 
-* The number of instructions exceed 256
+* The memory address of instructions exceed 256
 
 ## Files and There Uses
 * output.txt
