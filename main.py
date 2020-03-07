@@ -1,6 +1,6 @@
 opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB': '0100', 'BRZ': '0101',
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
-length_of_inst = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
+words = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
                   'BRN': 2, 'BRP': 2, 'INP': 2, 'DSP': 2, 'MUL': 2, 'DIV': 2, 'STP': 1}
 symbol_table = {}  # Stores all the labels and variables
 declare_table = []  # Stores all the variables that have been declared
@@ -66,14 +66,14 @@ def pass_one():
                     location_counter += 1
                     continue
                 else:
-                    if(len(line) <= length_of_inst[line[1]]):
+                    if(len(line) <= words[line[1]]):
                         error_file.write("\n Too few operands: " + str(line))
                         todelete.append(line)
                     location_counter += 1
                     continue
 
             if(line[1] in opcode_table):  # Checking if it is a valid opcode
-                if(len(line) > length_of_inst[line[1]]+1):
+                if(len(line) > words[line[1]]+1):
                     error_file.write("\n Too many operands: " + str(line))
                 symbol_table[line[2]] = ilc  # Add variable to symbol table
                 ilc += 1
@@ -97,13 +97,13 @@ def pass_one():
                     location_counter += 1
                     continue
                 else:
-                    if(len(line) < length_of_inst[line[0]]):
+                    if(len(line) < words[line[0]]):
                         error_file.write("\n Too few operands: " + str(line))
                         todelete.append(line)
                     location_counter += 1
                     continue
             if(line[0] in opcode_table):  # Checking if it is a valid opcode
-                if(len(line) > length_of_inst[line[0]]):
+                if(len(line) > words[line[0]]):
                     error_file.write("\n Too many operands: " + str(line))
                 location_counter += 1
                 if line[1] not in symbol_table:
