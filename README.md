@@ -45,7 +45,7 @@ The folowing are the errors handles in this program
 * The START statement is missing
 * The END statement is missing 
 
-## Strategy of Error Handling
+## Strategy for Error Handling
 The code file is read line by line and the comments and empty lines removed.
 It checks if the code starts with a START statment. If the START statement is not found then it shows error - The START statement is missing.
 It checks if the code end with an END statement. If the END statement is not found then it shows error - The END statement is missing.
