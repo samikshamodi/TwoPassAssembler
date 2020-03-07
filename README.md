@@ -53,8 +53,8 @@ It checks if the code end with an END statement. If the END statement is not fou
 During the first pass of the assembler,
 it first checks if there is a label. If the label is already present in the symbol table then it shows the error - a symbol has been defined more than once.
 It then searches for the opcode in the opcode table. If it is not found then it shows the error -  The name in the opcode field is not a legal opcode.
-For a legal opcode, if the length(instruction line read) is less than the required no of mandatory field then it shows the error - an opcode not supplied with enough operands. 
-For a legal opcode, if the length(instruction line read) is more than the required no of mandatory field (since the comments have been removed when the input file is processed) then it shows the error - an opcode not supplied with too many operands. 
+For a legal opcode, if the length(instruction line read) is less than the required no of mandatory fields then it shows the error - an opcode not supplied with enough operands. 
+For a legal opcode, if the length(instruction line read) is more than the required no of mandatory fields (since the comments have been removed when the input file is processed) then it shows the error - an opcode not supplied with too many operands. 
 
 During the second pass of the assembler,
 If the symbol being printed in output.txt is not found in the declare table then it shows the error - a symbol has been used but not defined. 
