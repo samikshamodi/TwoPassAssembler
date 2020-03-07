@@ -2,11 +2,11 @@ opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 length_of_inst = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
                   'BRN': 2, 'BRP': 2, 'INP': 2, 'DSP': 2, 'MUL': 2, 'DIV': 2, 'STP': 1}
-symbol_table = {}
-declare_table = []
+symbol_table = {}  # Stores all the labels and variables
+declare_table = []  # Stores all the variables that have been declared
 global input_file
 global location_counter
-ilc = 256
+ilc = 256  # ilc is instruction location counter
 
 
 def to_binary(data):
@@ -45,29 +45,10 @@ def process():
     return temp2
 
 
-def declaration_table():
-    global declare_table
-    temp_table = []
-    # Appending the 'DC' 'DS line in declare_table
-    while len(input_file[-1]) == 3 and (input_file[-1][1] == 'DS' or input_file[-1][1] == 'DC'):
-        declare_table.append(input_file[-1][0])
-        input_file.remove(input_file[-1])
-
-    # Checking if any symbol has been declared twice and removing it
-    for element in declare_table:
-        temp = declare_table.count(element)
-        if temp > 1:
-            error_file.write(
-                "\n Symbol defined more than once: " + str(element))
-            cnt = 1
-            while cnt < temp:
-                declare_table.remove(element)
-                cnt = cnt+1
-
-
 def pass_one():
     global location_counter
     global ilc
+    todelete = []  # invalid instructions are daved here to be deleted later
     for line in input_file:
         if line[0][-1] == ':':  # The line has a label
             if line[0][:-1] in symbol_table:
@@ -81,11 +62,13 @@ def pass_one():
             if len(line) == 2:
                 if (line[1] != 'CLA' and line[1] != 'STP' and line[1] not in opcode_table):
                     error_file.write("\n Invalid opcode: " + str(line[1]))
+                    todelete.append(line)
                     location_counter += 1
                     continue
                 else:
                     if(len(line) <= length_of_inst[line[1]]):
                         error_file.write("\n Too few operands: " + str(line))
+                        todelete.append(line)
                     location_counter += 1
                     continue
 
@@ -96,6 +79,7 @@ def pass_one():
                 ilc += 1
             else:
                 error_file.write("\n Invalid opcode: " + str(line[1]))
+                todelete.append(line)
 
         elif len(line) > 1 and (line[1] == 'DS' or line[1] == 'DC'):
             if line[0] in declare_table:
@@ -109,11 +93,13 @@ def pass_one():
             if len(line) == 1:
                 if (line[0] != 'CLA' and line[0] != 'STP' and line[0] not in opcode_table):
                     error_file.write("\n Invalid opcode: " + str(line[0]))
+                    todelete.append(line)
                     location_counter += 1
                     continue
                 else:
                     if(len(line) < length_of_inst[line[0]]):
                         error_file.write("\n Too few operands: " + str(line))
+                        todelete.append(line)
                     location_counter += 1
                     continue
             if(line[0] in opcode_table):  # Checking if it is a valid opcode
@@ -125,9 +111,42 @@ def pass_one():
                     ilc += 1
             else:
                 error_file.write("\n Invalid opcode: " + str(line[0]))
+                todelete.append(line)
+
+    # Removing declarative statements from input_file
+    while len(input_file[-1]) == 3 and (input_file[-1][1] == 'DS' or input_file[-1][1] == 'DC'):
+        input_file.remove(input_file[-1])
+
+    # Removing todelete from input_file
+    for i in todelete:
+        input_file.remove(i)
 
 
-# TODO error used but not defined in not in declare table OR in symbol table.
+def pass_two():
+    for line in input_file:
+        if(line[0][-1] == ':'):  # The line has a label
+            if(line[1]in opcode_table and line[1] == 'CLA' or line[1] == 'STP'):
+                output_file.write("\n"+opcode_table[line[1]])
+            elif line[1] in opcode_table:
+                output_file.write("\n"+opcode_table[line[1]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
+                # Displays error if symbol is used but not defined
+                if((line[2] not in declare_table) or (line[2] not in symbol_table)):
+                    error_file.write(
+                        "\n Symbol used but not defined: " + str(line[2]))
+
+        else:  # The line does not have a label
+            if(line[0]in opcode_table and line[0] == 'CLA' or line[0] == 'STP'):
+                output_file.write("\n"+opcode_table[line[1]])
+            elif line[0] in opcode_table:
+                output_file.write("\n"+opcode_table[line[0]])
+                output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
+                # Displays error if symbol is used but not defined
+                if((line[1] not in declare_table) or (line[1] not in symbol_table)):
+                    error_file.write(
+                        "\n Symbol used but not defined: " + str(line[1]))
+
+
 # Erasing output.txt file every time the program is run
 open("output.txt", "w").close()
 output_file = open("output.txt", "a")
@@ -172,13 +191,17 @@ if input_file[-1][0] == 'END':
 else:
     error_file.write("\n END statement is missing")
 
-
-# Stores the symbols that have been declared and are not labels
-# declaration_table()
-#print("\n Declare table: ", declare_table)
-
 print("\n", input_file)
 
+# Calls pass_one of the assembler
 pass_one()
-print(symbol_table)
+
+print("\n Symbol table: ", symbol_table)
 print("\n Declare table: ", declare_table)
+
+# Because the address where the program is loaded might overlap with the address where the variable is stored
+if(location_counter >= 256):
+    error_file.write("\n Memory address of instructions exceed 256")
+
+print("\n New: ", input_file)
+pass_two()
