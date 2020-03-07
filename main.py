@@ -84,68 +84,60 @@ def process(input_file):
 
 
 def pass_one(input_file):
+    # Builds the label table and the symbol table
+    global program_counter
+    global END_flag
+    global i
+    for j, line in enumerate(input_file):
+        if line[0][-1] == ':':  # The line has a label
+            label_table[line[0][:-1]] = j+program_counter
 
-    # Builds the label table
-    def build_label_table():
-        global program_counter
-        for j, line in enumerate(input_file):
-            if line[0][-1] == ':':  # The line has a label
-                label_table[line[0][:-1]] = j+program_counter
+        if(line[0][-1] == ':'):  # The line has a label
+            if(line[1] == 'CLA' or line[1] == 'STP' or line[1] == 'END'):
+                if(line[1] == 'END'):
+                    END_flag = True
+                if len(line) > 2:
+                    error_file.write("\n Too many operands"+str(line))
+            elif (line[1] in opcode_table):
+                if len(line) > 3:
+                    error_file.write("\n Too many operands"+str(line))
+                if len(line) < 3:
+                    error_file.write("\n Too few operands"+str(line))
+                if(line[2] not in label_table):
+                    if(line[2] not in symbol_table):
+                        if(line[2].isdigit()):
+                            symbol_table[line[2]] = int(line[2])
+                        else:
+                            symbol_table[line[2]] = 256+i
+                            i += 1
+            else:
+                error_file.write("\n Invalid opcode"+str(line))
+                input_file.remove(line)
 
-    # Builds the symbol table
-    def build_symbol_table():
-        global END_flag
-        global i
-        for line in input_file:
-            if(line[0][-1] == ':'):  # The line has a label
-                if(line[1] == 'CLA' or line[1] == 'STP' or line[1] == 'END'):
-                    if(line[1] == 'END'):
-                        END_flag = True
-                    if len(line) > 2:
-                        error_file.write("\n Too many operands"+str(line))
-                elif (line[1] in opcode_table):
-                    if len(line) > 3:
-                        error_file.write("\n Too many operands"+str(line))
-                    if len(line) < 3:
-                        error_file.write("\n Too few operands"+str(line))
-                    if(line[2] not in label_table):
-                        if(line[2] not in symbol_table):
-                            if(line[2].isdigit()):
-                                symbol_table[line[2]] = int(line[2])
-                            else:
-                                symbol_table[line[2]] = 256+i
-                                i += 1
-                else:
-                    error_file.write("\n Invalid opcode"+str(line))
-                    input_file.remove(line)
+        else:  # The line does not have a label
+            if(line[0] == 'CLA' or line[0] == 'STP' or line[0] == 'END'):
+                if(line[0] == 'END'):
+                    END_flag = True
+                if len(line) > 1:
+                    error_file.write("\n Too many operands"+str(line))
+            elif (line[0] in opcode_table):
+                if len(line) > 2:
+                    error_file.write("\n Too many operands"+str(line))
+                if len(line) < 2:
+                    error_file.write("\n Too few operands"+str(line))
+                if(line[1] not in label_table):
+                    if(line[1] not in symbol_table):
+                        if(line[1].isdigit()):
+                            symbol_table[line[1]] = int(line[1])
+                        else:
+                            symbol_table[line[1]] = 256+i
+                            i += 1
+            else:
+                error_file.write("\n Invalid opcode"+str(line))
+                input_file.remove(line)
 
-            else:  # The line does not have a label
-                if(line[0] == 'CLA' or line[0] == 'STP' or line[0] == 'END'):
-                    if(line[0] == 'END'):
-                        END_flag = True
-                    if len(line) > 1:
-                        error_file.write("\n Too many operands"+str(line))
-                elif (line[0] in opcode_table):
-                    if len(line) > 2:
-                        error_file.write("\n Too many operands"+str(line))
-                    if len(line) < 2:
-                        error_file.write("\n Too few operands"+str(line))
-                    if(line[1] not in label_table):
-                        if(line[1] not in symbol_table):
-                            if(line[1].isdigit()):
-                                symbol_table[line[1]] = int(line[1])
-                            else:
-                                symbol_table[line[1]] = 256+i
-                                i += 1
-                else:
-                    error_file.write("\n Invalid opcode"+str(line))
-                    input_file.remove(line)
-
-        if(END_flag == False):
-            error_file.write("\n END statement is missing")
-
-    build_label_table()
-    build_symbol_table()
+    if(END_flag == False):
+        error_file.write("\n END statement is missing")
 
     print("\n Label table: ", label_table)
     print("\n Symbol table: ", symbol_table)
@@ -254,7 +246,7 @@ error_file = open("error.txt", "a")
 
 # Takes the file name where the assembly language program is stored
 input_file_name = input("Enter input file name: ")
-#input_file_name = "input.txt"
+# input_file_name = "input.txt"
 
 try:
     input_file = open(input_file_name, "r")
@@ -299,4 +291,3 @@ other_errors(input_file)
 
 # Write the machine code in output.txt
 pass_two(input_file)
-
