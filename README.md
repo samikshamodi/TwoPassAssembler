@@ -11,7 +11,7 @@ This project attempts to emulate the working of an assembler by converting the a
 ## Logic & Working
 The two pass assembler performs two passes over the source program.
 
-In the first pass, it reads the entire source program. A symbol table having variables and labels with its address assigned is made. To assign address to labels, the assembler maintains a Program Counter.
+In the first pass, it reads the entire source program. A symbol table having variables and labels with its address assigned is made. To assign address to labels, the assembler maintains a Location Counter.
 
 In the second pass the instructions are again read and are assembled using the symbol table. Basically, the assembler goes through the program one line at a time, and generates machine code for that instruction. Then the assembler proceeds to the next instruction. In this way, the entire machine code is created. 
 
