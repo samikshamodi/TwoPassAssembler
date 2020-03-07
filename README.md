@@ -45,6 +45,21 @@ The folowing are the errors handles in this program
 * The START statement is missing
 * The END statement is missing 
 
+## Strategy of Error Handling
+The code file is read line by line and the comments and empty lines removed.
+It checks if the code starts with a START statment. If the START statement is not found then it shows error - The START statement is missing.
+It checks if the code end with an END statement. If the END statement is not found then it shows error - The END statement is missing.
+
+During the first pass of the assembler,
+it first checks if there is a label. If the label is already present in the symbol table then it shows the error - a symbol has been defined more than once.
+It then searches for the opcode in opcode table. If it is not found then it shows the error -  The name in the opcode is not a legal opcode.
+For a legal opcode, if the length(instruction line read) is less than the required no of mandatory field then it shows the error - an opcode not supplied with enough operands. 
+For a legal opcode, if the length(instruction line read) is more than the required no of mandatory field (since the comments have been removed when the input file is processed) then it shows the error - an opcode not supplied with too many operands. 
+
+During the second pass of the assembler,
+If the symbol being printed in output.txt is not found in the declare table then it shows the error - a symbol has been used but not defined. 
+
+
 ## Files and There Uses
 * output.txt
 On successful completion of the program the output.txt will have the machine code for the said assembly code.
