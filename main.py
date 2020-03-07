@@ -1,7 +1,7 @@
 opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB': '0100', 'BRZ': '0101',
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 words = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
-                  'BRN': 2, 'BRP': 2, 'INP': 2, 'DSP': 2, 'MUL': 2, 'DIV': 2, 'STP': 1}
+         'BRN': 2, 'BRP': 2, 'INP': 2, 'DSP': 2, 'MUL': 2, 'DIV': 2, 'STP': 1}
 symbol_table = {}  # Stores all the labels and variables
 declare_table = []  # Stores all the variables that have been declared
 global input_file
@@ -137,7 +137,7 @@ def pass_two():
 
         else:  # The line does not have a label
             if(line[0]in opcode_table and line[0] == 'CLA' or line[0] == 'STP'):
-                output_file.write("\n"+opcode_table[line[1]])
+                output_file.write("\n"+opcode_table[line[0]])
             elif line[0] in opcode_table:
                 output_file.write("\n"+opcode_table[line[0]])
                 output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
