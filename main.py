@@ -1,3 +1,5 @@
+# Samiksha Modi - 2019331
+# Vasu Yadav - 2019344
 opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB': '0100', 'BRZ': '0101',
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 words = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
