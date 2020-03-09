@@ -11,12 +11,12 @@ This project attempts to emulate the working of an assembler by converting the a
 ## Logic & Working
 The two pass assembler performs two passes over the source program.
 
-In the first pass, it reads the entire source program. A symbol table having variables and labels with its address assigned is made. To assign address to labels, the assembler maintains a Program Counter.
+In the first pass, it reads the entire source program. A symbol table having variables and labels with its address assigned is made. To assign address to labels, the assembler maintains a Location Counter.
 
 In the second pass the instructions are again read and are assembled using the symbol table. Basically, the assembler goes through the program one line at a time, and generates machine code for that instruction. Then the assembler proceeds to the next instruction. In this way, the entire machine code is created. 
 
-The program is loaded at memory address 0000 0000 0000 by default.
-The memory address of instructions should not exceed 256.
+The program is loaded at memory address 0 by default.
+The memory address of instructions should not exceed 256 as then the same address might be assigned to an instruction and a variable.
 
 ## Assembler Opcodes
 | Opcode | Meaning |	Assembly Opcode |
@@ -38,14 +38,27 @@ The memory address of instructions should not exceed 256.
 ## Errors Handled
 The folowing are the errors handles in this program
 * A symbol has been used but not defined
-* A symbol has been defined but not used
 * A symbol has been defined more than once 
 * The name in the opcode field is not a legal opcode 
 * An opcode is not supplied with enough operands 
 * An opcode is supplied with too many operands 
 * The START statement is missing
 * The END statement is missing 
-* The memory address of instructions exceed 256
+
+## Strategy for Error Handling
+The input code file is read line by line and the comments and empty lines removed.
+It checks if the input code file starts with a START statment. If the START statement is not found then it shows error - The START statement is missing.
+It checks if the input code file ends with an END statement. If the END statement is not found then it shows error - The END statement is missing.
+
+During the first pass of the assembler,
+it first checks if there is a label. If the label is already present in the symbol table then it shows the error - a symbol has been defined more than once.
+It then searches for the opcode in the opcode table. If it is not found then it shows the error -  The name in the opcode field is not a legal opcode. 
+For a legal opcode, if the length(instruction line read) is less than the required no of fields then it shows the error - an opcode not supplied with enough operands. 
+For a legal opcode, if the length(instruction line read) is more than the required no of fields then it shows the error - an opcode not supplied with too many operands. 
+
+During the second pass of the assembler,
+If the symbol being printed in output.txt is not found in the declare table then it shows the error - a symbol has been used but not defined. 
+
 
 ## Files and There Uses
 * output.txt

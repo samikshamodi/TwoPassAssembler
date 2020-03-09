@@ -1,20 +1,12 @@
 //Code Starts Here
 CLA // CLear Accumulator
-INP 140
-INP B //B
-LAC 256
-SUB B
-
-BRN L2
-DSP A
-
-//Clear Accumulator
-
-CLA
-BRZ L1
-L1: DSP B
-CLA
-
-//Just another comment
-BRZ L2
-L2: STP
+INP X
+INP Y
+LOOP: LAC RES
+XYZ: ADD X
+BRP LOOP
+SAC RES
+STP
+X DS 2
+X DS 3
+Y DC 4
