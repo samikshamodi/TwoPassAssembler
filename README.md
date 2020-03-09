@@ -8,14 +8,19 @@ This project attempts to emulate the working of an assembler by converting the a
 * Type python main.py
 * Enter input file name when asked.
 
-## Logic & Working
+## Working of a Two Pass Assembler
+### First Pass:
+![Annotation 2020-03-09 121049](https://user-images.githubusercontent.com/55681035/76188959-7377b080-61ff-11ea-92fc-12342b89da72.jpg)
+
+### Second Pass:
+![Annotation 2020-03-09 121309](https://user-images.githubusercontent.com/55681035/76189124-e84aea80-61ff-11ea-91c4-4ba5b87de057.jpg)
+
+## Logic Used Here
 The two pass assembler performs two passes over the source program.
 
 In the first pass, it reads the entire source program. A symbol table having variables and labels with its address assigned is made. To assign address to labels, the assembler maintains a Location Counter.
-![Annotation 2020-03-09 121049](https://user-images.githubusercontent.com/55681035/76188959-7377b080-61ff-11ea-92fc-12342b89da72.jpg)
 
 In the second pass the instructions are again read and are assembled using the symbol table. Basically, the assembler goes through the program one line at a time, and generates machine code for that instruction. Then the assembler proceeds to the next instruction. In this way, the entire machine code is created. 
-![Annotation 2020-03-09 121309](https://user-images.githubusercontent.com/55681035/76189124-e84aea80-61ff-11ea-91c4-4ba5b87de057.jpg)
 
 The program is loaded at memory address 0 by default.
 The memory address of instructions should not exceed 256 as then the same address might be assigned to an instruction and a variable.
@@ -60,7 +65,6 @@ For a legal opcode, if the length(instruction line read) is more than the requir
 
 During the second pass of the assembler,
 If the symbol being printed in output.txt is not found in the declare table then it shows the error - a symbol has been used but not defined. 
-
 
 ## Files and There Uses
 * output.txt
