@@ -1,4 +1,4 @@
-# Two Pass Assemble
+# Two Pass Assembler
 A program in python for two-pass assembler for the 12 bit accumulator architecture.
 
 This project attempts to emulate the working of an assembler by converting the assembly code to machine code.
