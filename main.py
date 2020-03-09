@@ -131,7 +131,7 @@ def pass_two():
                 output_file.write("\n"+opcode_table[line[1]])
                 output_file.write("\t"+to_binary(str(symbol_table[line[2]])))
                 # Displays error if symbol is used but not defined
-                if((line[2] not in declare_table) or (line[2] not in symbol_table)):
+                if((line[2] not in declare_table) and (line[2] not in symbol_table)):
                     error_file.write(
                         "\n Symbol used but not defined: " + str(line[2]))
 
@@ -142,7 +142,7 @@ def pass_two():
                 output_file.write("\n"+opcode_table[line[0]])
                 output_file.write("\t"+to_binary(str(symbol_table[line[1]])))
                 # Displays error if symbol is used but not defined
-                if((line[1] not in declare_table) or (line[1] not in symbol_table)):
+                if((line[1] not in declare_table) and (line[1] not in symbol_table)):
                     error_file.write(
                         "\n Symbol used but not defined: " + str(line[1]))
 
