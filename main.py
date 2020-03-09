@@ -1,5 +1,3 @@
-# Samiksha Modi - 2019331
-# Vasu Yadav - 2019344
 opcode_table = {'CLA': '0000', 'LAC': '0001', 'SAC': '0010', 'ADD': '0011', 'SUB': '0100', 'BRZ': '0101',
                 'BRN': '0110', 'BRP': '0111', 'INP': '1000', 'DSP': '1001', 'MUL': '1010', 'DIV': '1011', 'STP': '1100'}
 words = {'CLA': 1, 'LAC': 2, 'SAC': 2, 'ADD': 2, 'SUB': 2, 'BRZ': 2,
@@ -8,7 +6,7 @@ symbol_table = {}  # Stores all the labels and variables
 declare_table = []  # Stores all the variables that have been declared
 global input_file
 global location_counter
-ilc = 256  # ilc is instruction location counter
+xyz = 256  
 
 
 def to_binary(data):
@@ -49,7 +47,7 @@ def process():
 
 def pass_one():
     global location_counter
-    global ilc
+    global xyz
     todelete = []  # invalid instructions are daved here to be deleted later
     for line in input_file:
         if line[0][-1] == ':':  # The line has a label
@@ -77,8 +75,8 @@ def pass_one():
             if(line[1] in opcode_table):  # Checking if it is a valid opcode
                 if(len(line) > words[line[1]]+1):
                     error_file.write("\n Too many operands: " + str(line))
-                symbol_table[line[2]] = ilc  # Add variable to symbol table
-                ilc += 1
+                symbol_table[line[2]] = xyz  # Add variable to symbol table
+                xyz += 1
             else:
                 error_file.write("\n Invalid opcode: " + str(line[1]))
                 todelete.append(line)
@@ -109,8 +107,8 @@ def pass_one():
                     error_file.write("\n Too many operands: " + str(line))
                 location_counter += 1
                 if line[1] not in symbol_table:
-                    symbol_table[line[1]] = ilc  # Add variable to symbol table
-                    ilc += 1
+                    symbol_table[line[1]] = xyz  # Add variable to symbol table
+                    xyz += 1
             else:
                 error_file.write("\n Invalid opcode: " + str(line[0]))
                 todelete.append(line)
@@ -158,8 +156,8 @@ open("error.txt", "w").close()
 error_file = open("error.txt", "a")
 
 # Takes the file name where the assembly language program is stored
-#input_file_name = input("Enter input file name: ")
-input_file_name = "input.txt"
+input_file_name = input("Enter input file name: ")
+#input_file_name = "input.txt"
 
 try:
     input_file = open(input_file_name, "r")
