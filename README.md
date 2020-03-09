@@ -15,6 +15,7 @@ In the first pass, it reads the entire source program. A symbol table having var
 ![Annotation 2020-03-09 121049](https://user-images.githubusercontent.com/55681035/76188959-7377b080-61ff-11ea-92fc-12342b89da72.jpg)
 
 In the second pass the instructions are again read and are assembled using the symbol table. Basically, the assembler goes through the program one line at a time, and generates machine code for that instruction. Then the assembler proceeds to the next instruction. In this way, the entire machine code is created. 
+![Annotation 2020-03-09 121309](https://user-images.githubusercontent.com/55681035/76189124-e84aea80-61ff-11ea-91c4-4ba5b87de057.jpg)
 
 The program is loaded at memory address 0 by default.
 The memory address of instructions should not exceed 256 as then the same address might be assigned to an instruction and a variable.
