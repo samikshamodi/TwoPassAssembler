@@ -8,7 +8,7 @@ This project attempts to emulate the working of an assembler by converting the a
 * Download this repository
 * Open terminal and navigate to the directory where the files are saved
 * Type python main.py
-* Enter input file name when asked.
+* Enter input file name when asked
 
 ## Working of a Two Pass Assembler
 ### First Pass:
