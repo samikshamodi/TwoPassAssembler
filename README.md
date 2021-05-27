@@ -4,6 +4,7 @@ A program in python for two-pass assembler for the 12 bit accumulator architectu
 This project attempts to emulate the working of an assembler by converting the assembly code to machine code.
 
 ## Usage
+* The program is written in Python 3.6.9
 * Open terminal and navigate to the directory where the files are saved. 
 * Type python main.py
 * Enter input file name when asked.
